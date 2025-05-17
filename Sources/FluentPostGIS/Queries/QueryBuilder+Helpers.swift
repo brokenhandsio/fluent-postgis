@@ -15,8 +15,9 @@ extension QueryBuilder {
     static func path<M, F>(_ field: KeyPath<M, F>) -> any SQLExpression
         where M: Schema, F: QueryableProperty, F.Model == M
     {
-        let path = M.path(for: field).map(\.description).joined(separator: "_")
-        return SQLColumn(path)
+        let schema = SQLIdentifier(M.schemaOrAlias)
+        let path = SQLIdentifier(M.path(for: field).map(\.description).joined(separator: "_"))
+        return SQLColumn(path, table: schema)
     }
 }
 
